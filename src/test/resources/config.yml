@@ -1,0 +1,9 @@
+applicationUrl : "https://www.amazon.in/"
+Brand : "MSI"
+device : "Laptops"
+deviceConfig:
+  ramType : "DDR5"
+  ramSize : "16"
+creds:
+  username: "raodeepak663@gmail.com"
+  password: "24@April1991"
