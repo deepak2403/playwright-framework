@@ -1,0 +1,6 @@
+# Credentials & session
+src/test/resources/config.yml
+src/test/resources/session/storageState.json
+
+# Build output
+target/

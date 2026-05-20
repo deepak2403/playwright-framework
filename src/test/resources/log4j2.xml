@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <RollingFile name="FileLogger"
+                     fileName="target/logs/test-run.log"
+                     filePattern="target/logs/test-run-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <!-- Suppress noisy internals -->
+        <Logger name="org.apache.http"  level="WARN" additivity="false"><AppenderRef ref="Console"/></Logger>
+        <Logger name="io.restassured"   level="WARN" additivity="false"><AppenderRef ref="Console"/></Logger>
+
+        <!-- Framework packages -->
+        <Logger name="base"      level="INFO" additivity="false"><AppenderRef ref="Console"/><AppenderRef ref="FileLogger"/></Logger>
+        <Logger name="pages"     level="INFO" additivity="false"><AppenderRef ref="Console"/><AppenderRef ref="FileLogger"/></Logger>
+        <Logger name="api"       level="INFO" additivity="false"><AppenderRef ref="Console"/><AppenderRef ref="FileLogger"/></Logger>
+        <Logger name="core"      level="INFO" additivity="false"><AppenderRef ref="Console"/><AppenderRef ref="FileLogger"/></Logger>
+        <Logger name="listeners" level="INFO" additivity="false"><AppenderRef ref="Console"/><AppenderRef ref="FileLogger"/></Logger>
+        <Logger name="tests"     level="INFO" additivity="false"><AppenderRef ref="Console"/><AppenderRef ref="FileLogger"/></Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileLogger"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>

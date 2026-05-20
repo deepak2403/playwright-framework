@@ -5,5 +5,5 @@ deviceConfig:
   ramType : "DDR5"
   ramSize : "16"
 creds:
-  username: ""
-  password: ""
+  username: "YOUR_USERNAME"
+  password: "YOUR_PASSWORD"
