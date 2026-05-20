@@ -1,9 +1,0 @@
-applicationUrl  : "https://www.amazon.in/"
-laptopBrand : "MSI"
-device : "Laptops"
-deviceConfig:
-  ramType : "DDR5"
-  ramSize : "16"
-creds:
-  username: ""
-  password: ""
