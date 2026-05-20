@@ -3,16 +3,20 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
-import org.testng.Assert;
+
 import utils.ConfigReader;
-import com.microsoft.playwright.assertions.PlaywrightAssertions;
+import io.qameta.allure.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 import java.util.Map;
 import java.util.regex.Pattern;
+import utils.WaitHelper;
 
 public class HomePage {
 
+    private static final Logger log = LogManager.getLogger(HomePage.class);
     private Page page;
     private ConfigReader configReader;
     private final Locator searchBox;
@@ -26,16 +30,23 @@ public class HomePage {
         this.searchButton = page.locator("//input[@id='nav-search-submit-button']");
     }
 
+
+    // Replace open() with:
+    @Step("Open Amazon homepage")
     public void open() {
+        log.info("Opening: {}", configReader.getString("applicationUrl"));
         page.navigate(configReader.getString("applicationUrl"));
     }
 
     public void login() {
         Map<String,String> credentials = configReader.getDeviceConfig("creds");
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(Pattern.compile("sign in Account"))).hover();
-        page.locator("//span[text()='Sign in']/parent::a").click();
-        page.waitForURL("**/ap/signin**");
 
+        Locator accountLink = page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(Pattern.compile("sign in Account")));
+        Locator signInLink  = page.locator("//span[text()='Sign in']/parent::a");
+        WaitHelper.hoverAndWaitForVisible(accountLink, signInLink);
+        signInLink.click();
+
+        page.waitForURL("**/ap/signin**");
         page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName(Pattern.compile("Enter mobile number"))).fill(credentials.get("username"));
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Continue"))).click();
         page.waitForURL("**/ax/claim**");
@@ -43,16 +54,24 @@ public class HomePage {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Sign in"))).click();
         Locator element = page.locator("//span[contains(text(),'Hello,')]");
         assertThat(element).not().containsText("sign in");
-
-
-
     }
 
+    @Step("Search for configured product")
     public void searchProduct() {
-
-        searchBox.fill(configReader.getString("Brand").toString()+" "+configReader.getString("device").toString());
+        searchFor(configReader.getString("laptopBrand") + " " + configReader.getString("device"));
+        page.waitForURL("**/s?k=MSI+Laptops**");
+    }
+    @Step("Search for: {keyword}")
+    public void searchFor(String keyword) {
+        log.info("Searching for: {}", keyword);
+        searchBox.fill(keyword);
         searchButton.click();
+    }
 
+    @Step("Check if user is logged in")
+    public boolean isLoggedIn() {
+        Locator el = page.locator("//span[contains(text(),'Hello,')]");
+        return el.isVisible() && !el.innerText().toLowerCase().contains("sign in");
     }
 
 
