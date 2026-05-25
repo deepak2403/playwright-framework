@@ -1,19 +1,16 @@
 pipeline {
     agent any
 
-// pipeline version 1.0
     triggers {
-        // Triggers on every push via GitHub webhook
         githubPush()
     }
 
     tools {
-        maven 'Maven'   // Must match the name configured in Jenkins → Global Tool Config
-        jdk   'JDK11'   // Must match the name configured in Jenkins → Global Tool Config
+        maven 'Maven'
+        jdk   'JDK11'
     }
 
     environment {
-        // Pull all test credentials from Jenkins credentials store
         USER1_EMAIL              = credentials('USER1_EMAIL')
         USER1_PASSWORD           = credentials('USER1_PASSWORD')
         USER1_SEARCH_TERM        = credentials('USER1_SEARCH_TERM')
@@ -41,42 +38,46 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile -q'
+                bat 'mvn clean compile -q'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
             }
         }
 
         stage('Install Playwright Browsers') {
             steps {
-                sh 'mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install chromium"'
+                bat 'mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install chromium"'
             }
         }
 
         stage('Run API Tests') {
             steps {
-                sh 'mvn test -Dsuite=api'
+                bat 'mvn test -Dsuite=api'
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
                 }
             }
         }
 
         stage('Run E2E Tests') {
             steps {
-                // Headless mode for CI — no display available on Jenkins agent
-                sh 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
+                bat 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
                 }
             }
         }
 
         stage('Allure Report') {
             steps {
-                sh 'mvn allure:report'
+                bat 'mvn allure:report'
             }
             post {
                 always {
@@ -98,7 +99,6 @@ pipeline {
             echo "All tests passed."
         }
         always {
-            // Clean workspace after run to avoid session file bleed between builds
             cleanWs()
         }
     }
