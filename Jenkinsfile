@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+// pipeline version 1.0
     triggers {
         // Triggers on every push via GitHub webhook
         githubPush()
