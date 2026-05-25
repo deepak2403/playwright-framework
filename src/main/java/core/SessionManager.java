@@ -31,6 +31,31 @@ public class SessionManager {
         }
     }
 
+    /**
+     * Returns a per-user session path derived from the email address.
+     * Used by @Factory runs where each instance needs its own session file.
+     * Example: user1@gmail.com → storageState_user1_gmail_com.json
+     */
+    public static Path getSessionPath(String email) {
+        String sanitized = email.replaceAll("[^a-zA-Z0-9]", "_");
+        return Paths.get(SESSION_DIR + "storageState_" + sanitized + ".json");
+    }
+
+    /**
+     * Save session to an explicit path — used by @Factory per-user login.
+     */
+    public static void saveSession(BrowserContext context, Path saveTo) {
+        try {
+            new File(SESSION_DIR).mkdirs();
+            context.storageState(new BrowserContext.StorageStateOptions()
+                    .setPath(saveTo));
+            log.info("Session saved → {}", saveTo);
+        } catch (Exception e) {
+            log.error("Failed to save session: {}", e.getMessage());
+            throw new RuntimeException("Session save failed", e);
+        }
+    }
+
     public static boolean sessionExists() {
         File f = new File(SESSION_FILE);
         return f.exists() && f.length() > 0;

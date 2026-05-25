@@ -1,6 +1,15 @@
 # Credentials & session
 src/test/resources/config.yml
-src/test/resources/session/storageState.json
+src/test/resources/session/
 
 # Build output
 target/
+# IDE files
+.idea/
+*.iml
+
+# Zip files
+*.zip
+
+# Factory file (contains credentials)
+src/test/java/tests/EcommerceTestFactory.java

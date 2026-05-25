@@ -56,10 +56,43 @@ public class HomePage {
         assertThat(element).not().containsText("sign in");
     }
 
+    @Step("Login as {email}")
+    public void login(String email, String password) {
+        Locator accountLink = page.getByRole(AriaRole.LINK,
+                new Page.GetByRoleOptions().setName(Pattern.compile("sign in Account")));
+        Locator signInLink  = page.locator("//span[text()='Sign in']/parent::a");
+        WaitHelper.hoverAndWaitForVisible(accountLink, signInLink);
+        signInLink.click();
+
+        page.waitForURL("**/ap/signin**");
+        page.getByRole(AriaRole.TEXTBOX,
+                        new Page.GetByRoleOptions().setName(Pattern.compile("Enter mobile number")))
+                .fill(email);
+        page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName(Pattern.compile("Continue")))
+                .click();
+        page.waitForURL("**/ax/claim**");
+        page.getByRole(AriaRole.TEXTBOX,
+                        new Page.GetByRoleOptions().setName("Password"))
+                .fill(password);
+        page.getByRole(AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName(Pattern.compile("Sign in")))
+                .click();
+
+        Locator element = page.locator("//span[contains(text(),'Hello,')]");
+        assertThat(element).not().containsText("sign in");
+    }
+
     @Step("Search for configured product")
     public void searchProduct() {
         searchFor(configReader.getString("laptopBrand") + " " + configReader.getString("device"));
         page.waitForURL("**/s?k=MSI+Laptops**");
+    }
+    @Step("Search for: {searchTerm}")
+    public void searchProduct(String searchTerm) {
+        searchFor(searchTerm);
+        // Wait for results page — URL will contain the encoded search term
+        page.waitForURL("**/s?k=**");
     }
     @Step("Search for: {keyword}")
     public void searchFor(String keyword) {
@@ -74,8 +107,4 @@ public class HomePage {
         return el.isVisible() && !el.innerText().toLowerCase().contains("sign in");
     }
 
-
-//    public void selectProduct() {
-//        page.locator().click();
-//    }
 }
