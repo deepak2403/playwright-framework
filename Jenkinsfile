@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('Run E2E Tests') {
+        stage('Run E2E Test') {
             steps {
                 bat 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
             }
