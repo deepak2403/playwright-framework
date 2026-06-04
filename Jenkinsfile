@@ -66,7 +66,10 @@ pipeline {
 
         stage('Run E2E Test') {
             steps {
-                bat 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
+                withCredentials([file(credentialsId: 'e2e-config-yaml', variable: 'CONFIG_FILE')]) {
+                    bat 'copy "%CONFIG_FILE%" src\\test\\resources\\config.yml'
+                    bat 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
+                }
             }
             post {
                 always {
