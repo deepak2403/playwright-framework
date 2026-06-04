@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        stage('Run API Tests') {
+        stage('Run API Test') {
             steps {
                 bat 'mvn test -Dsuite=api'
             }
