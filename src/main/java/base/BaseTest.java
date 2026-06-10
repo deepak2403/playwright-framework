@@ -46,11 +46,14 @@ public class BaseTest {
     public void classSetUp() {
         // Each thread gets its own Playwright + Browser instance
         Playwright pw = Playwright.create();
+        boolean headless = Boolean.parseBoolean(
+                System.getProperty("playwright.headless",
+                        System.getenv("JENKINS_HOME") != null ? "true" : "false")
+        );
         Browser br = pw.chromium().launch(
                 new BrowserType.LaunchOptions()
-                        .setHeadless(false)
-                        .setSlowMo(1000)
-                        .setChannel("chrome")
+                        .setHeadless(headless)
+                        .setSlowMo(headless ? 0 : 500)
                         .setArgs(Arrays.asList(
                                 "--start-maximized",
                                 "--disable-blink-features=AutomationControlled",
@@ -76,7 +79,7 @@ public class BaseTest {
         }
 
         Browser.NewContextOptions opts = new Browser.NewContextOptions()
-                .setViewportSize(null)
+                .setViewportSize(1280, 720)
                 .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                         + "AppleWebKit/537.36 (KHTML, like Gecko) "
                         + "Chrome/136.0.0.0 Safari/537.36")

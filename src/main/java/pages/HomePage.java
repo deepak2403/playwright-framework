@@ -47,7 +47,7 @@ public class HomePage {
         WaitHelper.hoverAndWaitForVisible(accountLink, signInLink);
         signInLink.click();
 
-        page.waitForURL("**/ap/signin**");
+        page.waitForURL("**/ap/signin**", new Page.WaitForURLOptions().setTimeout(45000));
         page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName(Pattern.compile("Enter mobile number"))).fill(credentials.get("username"));
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Continue"))).click();
         page.waitForURL("**/ax/claim**");

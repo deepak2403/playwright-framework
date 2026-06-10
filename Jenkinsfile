@@ -58,7 +58,10 @@ pipeline {
 
         stage('Run API Test') {
             steps {
-                bat 'mvn test -Dsuite=api'
+                withCredentials([file(credentialsId: 'e2e-session', variable: 'SESSION_FILE')]) {
+                    bat 'mkdir src\\test\\resources\\session 2>nul & copy "%SESSION_FILE%" src\\test\\resources\\session\\storageState.json'
+                    bat 'mvn test -Dsuite=api -Dplaywright.headless=true'
+                }
             }
             post {
                 always {
