@@ -53,7 +53,9 @@ public class BaseTest {
                         .setChannel("chrome")
                         .setArgs(Arrays.asList(
                                 "--start-maximized",
-                                "--disable-blink-features=AutomationControlled"
+                                "--disable-blink-features=AutomationControlled",
+                                "--no-sandbox",
+                                "--disable-dev-shm-usage"
                         ))
         );
         tlPlaywright.set(pw);
@@ -79,13 +81,13 @@ public class BaseTest {
                         + "AppleWebKit/537.36 (KHTML, like Gecko) "
                         + "Chrome/136.0.0.0 Safari/537.36")
                 .setStorageStatePath(sessionPath);
-
         BrowserContext ctx = tlBrowser.get().newContext(opts);
         ctx.setDefaultTimeout(30000);
         ctx.addInitScript(
                 "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
 
         Page page = ctx.newPage();
+
         tlClassCtx.set(ctx);
         tlClassPage.set(page);
         log.info("Class-scoped page created for {}", this.getClass().getSimpleName());

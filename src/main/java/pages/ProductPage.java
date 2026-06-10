@@ -1,7 +1,9 @@
 package pages;
 
+import com.google.gson.JsonObject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Route;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -100,6 +102,7 @@ public class ProductPage {
     public Page addToCart() throws InterruptedException {
         Locator allCards = page.locator("[data-component-type='s-search-result']");
         int totalCards = allCards.count();
+        
         log.info("Total product cards on page: {}", totalCards);
 
         if (totalCards == 0) {
@@ -136,6 +139,20 @@ public class ProductPage {
                 log.debug("Card {}: unparseable rating '{}' — skipping", i, ratingText);
                 continue;
             }
+
+            JsonObject mockPateint = new JsonObject();
+            mockPateint.addProperty("id",123);
+            mockPateint.addProperty("name","John Doe");
+
+            Map<String, Object> mockPatients = Map.of(
+                    "id",        123,
+                    "name",      "John Doe",
+                    "age",       45,
+                    "diagnosis", "Hypertension",
+                    "ward",      "Cardiology"
+            );
+            page.route("**/user/api",route -> {route.fulfill(new Route.FulfillOptions()
+                    .setStatus(200).setContentType("application/json").setBody(mockPateint.getAsString()));});
 
             // ── Price ─────────────────────────────────────────────
             Locator priceLocator = card.locator("span.a-price-whole").first();

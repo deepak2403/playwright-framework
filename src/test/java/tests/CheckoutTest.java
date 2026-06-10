@@ -29,7 +29,7 @@ public class CheckoutTest extends BaseTest {
 
     private static Page searchPage;
     private static BrowserContext sharedContext;
-    private static Page sharedPage;
+
 
     // ── Test 1 ────────────────────────────────────
 
@@ -38,7 +38,8 @@ public class CheckoutTest extends BaseTest {
             description = "Open Amazon and search with stored session — no UI login")
     @Story("Search")
     @Severity(SeverityLevel.BLOCKER)
-    public void searchAndApplyFilters() {
+    public void searchAndApplyFilters()
+    {
         HomePage home = new HomePage(getPage());
         home.open();
 

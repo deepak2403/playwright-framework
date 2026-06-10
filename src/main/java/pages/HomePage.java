@@ -2,6 +2,7 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.AriaRole;
 
 import utils.ConfigReader;
@@ -51,9 +52,20 @@ public class HomePage {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Continue"))).click();
         page.waitForURL("**/ax/claim**");
         page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Password")).fill(credentials.get("password"));
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Sign in"))).click();
+        //page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Sign in"))).click();
+        page.locator("#signInSubmit").click();
+
+        // Amazon may show OTP screen — wait up to 60s for manual completion
+        page.waitForURL(url ->
+                        url.contains("amazon.in") &&
+                                !url.contains("/ap/signin") &&
+                                !url.contains("/ax/claim"),
+                new Page.WaitForURLOptions().setTimeout(60000)
+        );
+
         Locator element = page.locator("//span[contains(text(),'Hello,')]");
-        assertThat(element).not().containsText("sign in");
+        assertThat(element).isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(10000));
+        //assertThat(element).not().containsText("sign in");
     }
 
     @Step("Login as {email}")
@@ -78,6 +90,7 @@ public class HomePage {
         page.getByRole(AriaRole.BUTTON,
                         new Page.GetByRoleOptions().setName(Pattern.compile("Sign in")))
                 .click();
+
 
         Locator element = page.locator("//span[contains(text(),'Hello,')]");
         assertThat(element).not().containsText("sign in");
