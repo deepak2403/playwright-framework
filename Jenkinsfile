@@ -33,7 +33,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-            }
+                    withCredentials([file(credentialsId: 'e2e-config-yaml', variable: 'CONFIG_FILE')]) {
+                        bat 'copy "%CONFIG_FILE%" src\\test\\resources\\config.yml'
+        }
         }
 
         stage('Build') {
@@ -66,10 +68,10 @@ pipeline {
 
         stage('Run E2E Tests') {
             steps {
-                withCredentials([file(credentialsId: 'e2e-config-yaml', variable: 'CONFIG_FILE')]) {
-                    bat 'copy "%CONFIG_FILE%" src\\test\\resources\\config.yml'
-                    bat 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
-                }
+        withCredentials([file(credentialsId: 'e2e-session', variable: 'SESSION_FILE')]) {
+            bat 'mkdir src\\test\\resources\\session 2>nul & copy "%SESSION_FILE%" src\\test\\resources\\session\\storageState.json'
+            bat 'mvn test -Dsuite=e2e -Dplaywright.headless=true'
+        }
             }
             post {
                 always {
