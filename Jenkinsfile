@@ -70,7 +70,7 @@ pipeline {
             }
         }
 
-        stage('Run E2E Tests') {
+        stage('Run E2E Test') {
             steps {
                 withCredentials([file(credentialsId: 'e2e-session', variable: 'SESSION_FILE')]) {
                     bat 'mkdir src\\test\\resources\\session 2>nul & copy "%SESSION_FILE%" src\\test\\resources\\session\\storageState.json'
