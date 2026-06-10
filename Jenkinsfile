@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('Run E2E Tests') {
+        stage('Run E2E Test') {
             steps {
                 withCredentials([file(credentialsId: 'e2e-config-yaml', variable: 'CONFIG_FILE')]) {
                     bat 'copy "%CONFIG_FILE%" src\\test\\resources\\config.yml'
