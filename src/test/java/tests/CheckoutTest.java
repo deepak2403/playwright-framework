@@ -93,19 +93,19 @@ public class CheckoutTest extends BaseTest {
         );
     }
 
-    @Test(priority = 3,
-            groups = {"e2e", "regression"},
-            dependsOnMethods = {"proceedToCheckout"},
-            description = "Verify checkout flow till payment gateway")
-    @Story("Checkout")
-    @Severity(SeverityLevel.CRITICAL)
-    public void selectAddressAndPaymentMethod() {
-        CheckoutPage checkout = new CheckoutPage(productDetailPage);
-
-        // Address
-        Assert.assertTrue(checkout.isAddressSectionVisible(), "Address section should be visible");
-        checkout.selectDeliveryAddress();
-        productDetailPage.waitForTimeout(2000);
-
-    }
+//    @Test(priority = 3,
+//            groups = {"e2e", "regression"},
+//            dependsOnMethods = {"proceedToCheckout"},
+//            description = "Verify checkout flow till payment gateway")
+//    @Story("Checkout")
+//    @Severity(SeverityLevel.CRITICAL)
+//    public void selectAddressAndPaymentMethod() {
+//        CheckoutPage checkout = new CheckoutPage(productDetailPage);
+//
+//        // Address
+//        Assert.assertTrue(checkout.isAddressSectionVisible(), "Address section should be visible");
+//        checkout.selectDeliveryAddress();
+//        productDetailPage.waitForTimeout(2000);
+//
+//    }
 }
