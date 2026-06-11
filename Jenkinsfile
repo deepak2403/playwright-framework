@@ -84,21 +84,21 @@ pipeline {
             }
         }
 
-        stage('Allure Report') {
-            steps {
-                bat 'mvn allure:report'
-            }
-            post {
-                always {
-                    allure([
-                        includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'allure-results']]
-                    ])
-                }
-            }
-        }
-    }
+       stage('Allure Report') {
+           steps {
+               bat 'mvn allure:report'
+           }
+           post {
+               always {
+                   allure([
+                       includeProperties: false,
+                       jdk: '',
+                       commandline: 'allure',        // ← add this line, matches the name you set
+                       results: [[path: 'allure-results']]
+                   ])
+               }
+           }
+       }
 
     post {
         failure {
