@@ -135,7 +135,7 @@
                 <configuration>
                     <suiteXmlFiles>
 <!--                        <suiteXmlFile>src/test/resources/testng/${suite}.xml</suiteXmlFile>-->
-                        <suiteXmlFile>src/test/resources/testng/e2e.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/testng/${suite}.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>

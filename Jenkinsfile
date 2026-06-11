@@ -86,7 +86,7 @@ pipeline {
 
         stage('Allure Report') {
             steps {
-                bat 'mvn allure:report'
+                echo 'Generating Allure report from test results...'
             }
             post {
                 always {
@@ -94,7 +94,7 @@ pipeline {
                         includeProperties: false,
                         jdk: '',
                         commandline: 'allure',
-                        results: [[path: 'allure-results']]
+                        results: [[path: 'target/allure-results']]
                     ])
                 }
             }
